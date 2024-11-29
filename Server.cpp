@@ -1,51 +1,54 @@
 #include "Server.h"
-#include <algorithm>
 
-Server::Server(int port) : port(port), listenSocket(INVALID_SOCKET) {
-    int result = WSAStartup(MAKEWORD(2, 2), &wsaData);
-    if (result != 0) {
-        std::cerr << "Erreur d'initialisation de WinSock : " << result << std::endl;
-    }
+#include <sys/types.h>        // Pour types comme sockaddr_in
+#include <sys/socket.h>       // Pour socket(), bind(), etc.
+#include <netinet/in.h>       // Pour sockaddr_in, AF_INET
+#include <arpa/inet.h>        // Pour inet_pton() et inet_ntoa()
+#include <unistd.h>           // Pour close() (au lieu de closesocket())
+#include <cstring>            // Pour memset()
+#include <errno.h>            // Pour strerror(errno)
+
+
+Server::Server(int port) : port(port), listenSocket(-1) {
+    // Aucun besoin de WSAStartup sous macOS
 }
 
 Server::~Server() {
     stop();
-    WSACleanup();
 }
 
 bool Server::start() {
-    listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-    if (listenSocket == INVALID_SOCKET) {
-        std::cerr << "Erreur de création du socket : " << WSAGetLastError() << std::endl;
-        WSACleanup();
+    listenSocket = socket(AF_INET, SOCK_STREAM, 0);  // Pas besoin de spécifier IPPROTO_TCP sous macOS
+    if (listenSocket == -1) {
+        std::cerr << "Erreur de création du socket : " << strerror(errno) << std::endl;
         return false;
     }
 
     sockaddr_in serverAddress;
+    std::memset(&serverAddress, 0, sizeof(serverAddress));  // Initialisation de la structure
     serverAddress.sin_family = AF_INET;
     serverAddress.sin_addr.s_addr = INADDR_ANY;
     serverAddress.sin_port = htons(port);
 
-    if (bind(listenSocket, (SOCKADDR*)&serverAddress, sizeof(serverAddress)) == SOCKET_ERROR) {
-        std::cerr << "Erreur de liaison du socket : " << WSAGetLastError() << std::endl;
-        closesocket(listenSocket);
-        WSACleanup();
+    if (bind(listenSocket, (struct sockaddr*)&serverAddress, sizeof(serverAddress)) == -1) {
+        std::cerr << "Erreur de liaison du socket : " << strerror(errno) << std::endl;
+        close(listenSocket);
         return false;
     }
 
-    if (listen(listenSocket, SOMAXCONN) == SOCKET_ERROR) {
-        std::cerr << "Erreur lors de l'écoute : " << WSAGetLastError() << std::endl;
-        closesocket(listenSocket);
-        WSACleanup();
+    if (listen(listenSocket, SOMAXCONN) == -1) {
+        std::cerr << "Erreur lors de l'écoute : " << strerror(errno) << std::endl;
+        close(listenSocket);
         return false;
     }
 
     std::cout << "Serveur en écoute sur le port " << port << std::endl;
 
     while (true) {
-        SOCKET clientSocket = accept(listenSocket, nullptr, nullptr);
-        if (clientSocket == INVALID_SOCKET) {
-            std::cerr << "Erreur d'acceptation de la connexion : " << WSAGetLastError() << std::endl;
+        int clientSocket = accept(listenSocket, nullptr, nullptr);
+        if (clientSocket == -1) {
+            std::cerr << "Erreur d'acceptation de la connexion : " << strerror(errno) << std::endl;
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));  // Attente avant de réessayer
             continue;
         }
 
@@ -62,15 +65,16 @@ bool Server::start() {
     return true;
 }
 
-void Server::handleClient(SOCKET clientSocket) {
+
+void Server::handleClient(int clientSocket) {
     char buffer[1024];
-    int bytesReceived;
+    ssize_t bytesReceived;
 
     while (true) {
         bytesReceived = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
-        if (bytesReceived == SOCKET_ERROR || bytesReceived == 0) {
+        if (bytesReceived == -1 || bytesReceived == 0) {
             std::cout << "Client déconnecté." << std::endl;
-            closesocket(clientSocket);
+            close(clientSocket);
 
             {
                 std::lock_guard<std::mutex> lock(clientMutex);
@@ -79,7 +83,7 @@ void Server::handleClient(SOCKET clientSocket) {
             return;
         }
 
-        buffer[bytesReceived] = '\0';
+        buffer[bytesReceived] = '\0';  // Assurez-vous que la chaîne est terminée par un caractère nul
         std::string message = buffer;
         std::cout << "Message reçu : " << message << std::endl;
 
@@ -87,11 +91,11 @@ void Server::handleClient(SOCKET clientSocket) {
     }
 }
 
-void Server::broadcastMessage(const std::string &message, SOCKET senderSocket) {
+void Server::broadcastMessage(const std::string &message, int senderSocket) {
     std::lock_guard<std::mutex> lock(clientMutex);
     std::cout << "Diffusion du message : " << message << std::endl;
 
-    for (SOCKET client : clientSockets) {
+    for (int client : clientSockets) {
         if (client != senderSocket) {
             send(client, message.c_str(), message.size() + 1, 0);
             std::cout << "Message envoyé au client sur socket : " << client << std::endl;
@@ -99,15 +103,14 @@ void Server::broadcastMessage(const std::string &message, SOCKET senderSocket) {
     }
 }
 
-
 void Server::stop() {
-    if (listenSocket != INVALID_SOCKET) {
-        closesocket(listenSocket);
-        listenSocket = INVALID_SOCKET;
+    if (listenSocket != -1) {
+        close(listenSocket);
+        listenSocket = -1;
     }
 
-    for (SOCKET clientSocket : clientSockets) {
-        closesocket(clientSocket);
+    for (int clientSocket : clientSockets) {
+        close(clientSocket);
     }
     clientSockets.clear();
 }

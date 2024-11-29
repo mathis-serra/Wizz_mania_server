@@ -1,3 +1,3 @@
-/Users/mathisserra/Downloads/Wizz_mania_server/cmake-build-debug/CMakeFiles/Wizz_mania_server.dir
-/Users/mathisserra/Downloads/Wizz_mania_server/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/mathisserra/Downloads/Wizz_mania_server/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/Users/mathisserra/Desktop/Github/B2_Laplateforme/Wizz_mania_server/cmake-build-debug/CMakeFiles/Wizz_mania_server.dir
+/Users/mathisserra/Desktop/Github/B2_Laplateforme/Wizz_mania_server/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/mathisserra/Desktop/Github/B2_Laplateforme/Wizz_mania_server/cmake-build-debug/CMakeFiles/rebuild_cache.dir
