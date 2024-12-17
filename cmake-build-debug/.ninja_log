@@ -1,5 +1,19 @@
 # ninja log v6
-7	338	1731512709437494738	build.ninja	42ca4b73c8606611
-2463	2642	7531462313538970	Wizz_mania.exe	af47f084e659d56f
-2117	2250	7532001277906269	Wizz_mania_server.exe	db464c80f61180d6
-1	26	1731512736806945952	CMakeFiles/Wizz_mania_server.dir/testThread.cpp.o	806ec3854b3f9b1c
+6	358	7546999536127123	build.ninja	f9424a2d234d6fe8
+12	3066	7535682723799326	CMakeFiles/Wizz_mania_server.dir/main.cpp.obj	f446c6ade7de5a10
+24	133	7535681736326718	CMakeFiles/Wizz_mania_server.dir/testThread.cpp.obj	8c9aa1c9c6f74e54
+9	2257	7535722831317312	CMakeFiles/Wizz_mania_server.dir/Server.cpp.obj	1c7737e79736ab3a
+2258	2401	7535722853803580	Wizz_mania_server.exe	75aed471092f08f0
+8	2018	7547016513076214	CMakeFiles/Wizz_mania_server.dir/main.cpp.obj	f446c6ade7de5a10
+14	2477	7547016513129250	CMakeFiles/Wizz_mania_server.dir/Server.cpp.obj	1c7737e79736ab3a
+2477	2638	7547016537766766	Wizz_mania_server.exe	75aed471092f08f0
+10	1961	7547017828713434	CMakeFiles/Wizz_mania_server.dir/main.cpp.obj	f446c6ade7de5a10
+14	2456	7547017828760205	CMakeFiles/Wizz_mania_server.dir/Server.cpp.obj	1c7737e79736ab3a
+2456	2613	7547017853182307	Wizz_mania_server.exe	75aed471092f08f0
+10	2102	7559826057822311	CMakeFiles/Wizz_mania_server.dir/main.cpp.obj	f446c6ade7de5a10
+16	2526	7559826057872051	CMakeFiles/Wizz_mania_server.dir/Server.cpp.obj	1c7737e79736ab3a
+2526	2911	7559826082976606	Wizz_mania_server.exe	75aed471092f08f0
+7	1855	7561361538531985	CMakeFiles/Wizz_mania_server.dir/main.cpp.obj	f446c6ade7de5a10
+1865	2034	7561361557104526	Wizz_mania_server.exe	75aed471092f08f0
+7	1759	7561361736986813	CMakeFiles/Wizz_mania_server.dir/main.cpp.obj	f446c6ade7de5a10
+1763	1906	7561361754544631	Wizz_mania_server.exe	75aed471092f08f0

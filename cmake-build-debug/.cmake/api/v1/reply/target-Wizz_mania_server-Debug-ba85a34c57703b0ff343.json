@@ -2,7 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "Wizz_mania_server"
+			"path" : "Wizz_mania_server.exe"
+		},
+		{
+			"path" : "Wizz_mania_server.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -25,13 +28,13 @@
 			{
 				"command" : 0,
 				"file" : 0,
-				"line" : 6,
+				"line" : 31,
 				"parent" : 0
 			},
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 9,
+				"line" : 35,
 				"parent" : 0
 			}
 		]
@@ -42,7 +45,15 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : "-g -std=gnu++20 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk -fcolor-diagnostics"
+					"fragment" : " -fpermissive -g -std=gnu++20 -fdiagnostics-color=always"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 2,
+					"isSystem" : true,
+					"path" : "C:/Program Files/vcpkg/installed/x64-windows/include"
 				}
 			],
 			"language" : "CXX",
@@ -68,7 +79,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-g",
+				"fragment" : "-fpermissive -g",
 				"role" : "flags"
 			},
 			{
@@ -82,14 +93,23 @@
 			},
 			{
 				"backtrace" : 2,
-				"fragment" : "-lws2_32",
+				"fragment" : "\"C:\\Program Files\\vcpkg\\installed\\x64-windows\\debug\\lib\\libssl.lib\"",
+				"role" : "libraries"
+			},
+			{
+				"backtrace" : 2,
+				"fragment" : "\"C:\\Program Files\\vcpkg\\installed\\x64-windows\\debug\\lib\\libcrypto.lib\"",
+				"role" : "libraries"
+			},
+			{
+				"fragment" : "-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32",
 				"role" : "libraries"
 			}
 		],
 		"language" : "CXX"
 	},
 	"name" : "Wizz_mania_server",
-	"nameOnDisk" : "Wizz_mania_server",
+	"nameOnDisk" : "Wizz_mania_server.exe",
 	"paths" : 
 	{
 		"build" : ".",

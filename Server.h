@@ -7,6 +7,10 @@
 #include <iostream>
 #include <vector>
 #include <mutex>
+#include <openssl/ssl.h>
+#include <openssl/err.h>
+#include <openssl/evp.h>
+#include <openssl/sha.h>
 
 #pragma comment(lib, "ws2_32.lib")
 
@@ -26,6 +30,12 @@ private:
     WSADATA wsaData;
     std::vector<SOCKET> clientSockets;
     std::mutex clientMutex;
+
+    SSL_CTX* ctx;
+
+    SSL_CTX* InitServerCTX();
+    void LoadCertificates(const char* CertFile, const char* KeyFile);
+    void handleSSLClient(SSL* ssl, SOCKET clientSocket);
 };
 
 #endif
